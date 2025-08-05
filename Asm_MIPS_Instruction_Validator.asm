@@ -3,18 +3,40 @@
 # Author:   Yotam Levit - ID. XXXX
 # Date:     3.8.2025 (dd.mm.YYYY)
 #
-# Description: The program calculates products of pairs of neighbor numbers
-#	       (positive and negative number) in an array of numbers using loops.
-#	       The program will also use additional registers to calculate 
-#	       the sum of all products and sum of the diffrences between products,
-#	       At the end of the program all the results will be printed to the user as presented on the MMN11_Q4.
+# Program: MMN11_Q5 — MIPS Instruction Memory Scanner
+#
+# Title:    MMN_11_Q5
+# Question: Q5
+# Author:   Yotam Levit - ID. 200041119
+# Date:     3.8.2025 (dd.mm.YYYY)
+#
+# Description: 	Read a sequence of 32-bit MIPS instructions in memory (labelled InstrMem,
+#       	   	terminated by 0xFFFFFFFF), and for each:
+#       	    * Classify as R-type, I-type or illegal
+#       	    * Extract register operands (rs, rt, and rd for R-types)
+#       	    * Count total, valid, invalid, R-type & I-type instructions
+#       	  	* Detect warnings:
+#       	        	- rs == rt in any beq or other R-type
+#       	        	- any attempt to write to $zero (rt==0 in loads, rd==0 in R-types)
+# 				* Accumulate a per-register usage frequency table
+#       	    * Print each warning/illegal as its found:
+#       	         	Warning: <msg> at index <dec>: 0x<hex>
+#       	         	Unknown instruction at index <dec>: 0x<hex>
+#       	   	After the scan, print:
+#       	     		Total instructions:    <N>
+#       	     		Valid instructions:    <M>
+#       	     		Invalid instructions:  <K>
+#       	     		R-type instructions:   <R>
+#       	     		I-type instructions:   <I>
+#       	     		Warnings:              <W>
+#	
+#       	     		Register usage:
+#       	       		$<reg> - <count> time(s)
 #		
 #
-# Input:       An array of 10 byte sized numbers represented using MSB / Two complement
+# Input:       .data -> InstrMem: .word <32-bit hex instuction>... , 0xFFFFFFFF terminator
 #
-# Output:      The program prints all the products of pairs of neighbor numbers in the array.
-#	       The program also prints the sum of all the products and the sum of the diffrences between the products.
-#	       The output will be exactly as presented in the example on MMN11_Q4 
+# Output:	Printed warnings, summary stats, and register usage as above
 #
 #################### Data Segment ####################
 .data
