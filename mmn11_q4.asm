@@ -1,6 +1,6 @@
 # Title:    MMN_11_Q4
 # Question: Q4
-# Author:   Yotam Levit - ID. 200041119
+# Author:   Yotam Levit - ID. XXXXXX
 # Date:     1.8.2025 (dd.mm.YYYY)
 #
 # Description: The program calculates products of pairs of neighbor numbers
