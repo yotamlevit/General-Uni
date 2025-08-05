@@ -97,7 +97,7 @@ scan_loop:
 	move $a0, $s6
 	jal  ClassifyInstruction
 	
-	bne $v0, 0, legal_instruction # TODO handle illeagal instrudctions
+	bne $v0, 0, legal_instruction
 	la $a0, e_illegal_msg
 	move $a1, $s0
 	move $a2, $s6
@@ -299,8 +299,8 @@ CheckWarnings:
 	srl $t1,$t3,26 # opcode -> $t1
 	
 	# Test if instruction is  R-type or beq and if rs==rt
-	ori $t2, $t1, 0x04 		# t2 = (opcode = R-Type or beq instrquction) # TODO check if ori is really needed
-	bne $t2, 0x04, test_zero_warn 	# Checks if instruction is not R-type or beq 
+	ori $t2, $t1, 0x04 		# t2 = (opcode = R-Type or beq instrquction)
+	bne $t1, 0x04, test_zero_warn 	# Checks if instruction is not R-type or beq 
 	bne $a1,$a2, test_zero_warn	# Checks if not rs==rt
 	
 	# If here rs==rt warning should be raised
@@ -311,7 +311,7 @@ CheckWarnings:
     	sw $a1, 4($sp)   # save rs
     	sw $a2, 0($sp)   # save inst word
 
-	# print “Warning: rs == rt at index ”
+	# print "Warning: rs == rt at index "
 	move $a1, $a0
 	la $a0, w_rsrt_msg
 	move $a2, $t3
@@ -345,7 +345,7 @@ print_zero_warn:
 	sw $a0, 8($sp)   # save index
     	sw $a1, 4($sp)   # save rs
     	sw $a2, 0($sp)   # save inst word
-	# print “Warning: rs == rt at index ”
+	# print "Warning: rs == rt at index"
 	move $a1, $a0
 	la $a0, w_zero_msg
 	move $a2, $t3
@@ -418,7 +418,6 @@ PrintWarning:
 #	I-type instructions: <X>
 #	Warnings: <X>
 # -------------------------------------------------------
-#warnings_count_msg: .asciiz "Warnings: " ### TODO
 PrintSummary:
 	# save return address and registers in stack
     	sub $sp, $sp, 4 # Can also use addi -8
