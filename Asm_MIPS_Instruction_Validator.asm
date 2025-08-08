@@ -85,7 +85,6 @@ main:
 	or $s0, $zero, $zero     # Setting $t0 as counter/index for total instructions. Using OR making sure register is 0.
 	or $s1, $zero, $zero     # Setting $t1 as counter for valid instructions. Using OR making sure register is 0.
 	or $s2, $zero, $zero     # Setting $t2 as counter for R-Type instructions. Using OR making sure register is 0.
-	#or $s3, $zero, $zero     # Setting $t3 as counter for I-Type instructions. Using OR making sure register is 0.
 	or $s4, $zero, $zero     # Setting $t4 as counter for Warnings. Using OR making sure register is 0.
 	la $s5, InstrMem 	 # Load base address of InstrMem array into $t0
 	
@@ -240,27 +239,24 @@ CountRegisters:
 	la $t0, RegCounters # Laods the base address of RegCounters
 	
 	# Count rs register
-	#mul $t3, $a1, 4
 	add $t1, $t0, $a1 # addr of rs register counter = RegCounters + rs
-	lb $t2, ($t1)	  # t2 contains current counter of the register
-	addi $t2, $t2, 1  # increment
+	lbu $t2, ($t1)	  # t2 contains current counter of the register
+	addiu $t2, $t2, 1  # increment
 	sb $t2, ($t1)    # Dump new count into memory
 	
 	# Count rt register
-	#mul $t3, $a2, 4
 	add $t1, $t0, $a2 # addr of rt register counter = RegCounters + rt
-	lb $t2, ($t1)	  # t2 contains current counter of the register
-	addi $t2, $t2, 1  # increment
+	lbu $t2, ($t1)	  # t2 contains current counter of the register
+	addiu $t2, $t2, 1  # increment
 	sb $t2, ($t1)    # Dump new count into memory
 	
 	bne $a0, 1, RetCountRegisters # if instruction type is not RType go to end of function, no need for rd count
 	
 	# If here instruction is t Rtype
 	# Count rd
-	#mul $t3, $a3, 4
 	add $t1, $t0, $a3 # addr of rd register counter = RegCounters + rd
-	lb $t2, ($t1)	  # t2 contains current counter of the register
-	addi $t2, $t2, 1  # increment
+	lbu $t2, ($t1)	  # t2 contains current counter of the register
+	addiu $t2, $t2, 1  # increment
 	sb $t2, ($t1)    # Dump  new count into memory
 	
 
@@ -300,7 +296,7 @@ CheckWarnings:
 	
 	# Test if instruction is  R-type or beq and if rs==rt
 	ori $t2, $t1, 0x04 		# t2 = (opcode = R-Type or beq instrquction)
-	bne $t1, 0x04, test_zero_warn 	# Checks if instruction is not R-type or beq 
+	bne $t2, 0x04, test_zero_warn 	# Checks if instruction is not R-type or beq 
 	bne $a1,$a2, test_zero_warn	# Checks if not rs==rt
 	
 	# If here rs==rt warning should be raised
@@ -426,7 +422,6 @@ PrintSummary:
 	move $t0, $a0
 	move $t1, $a1
 	move $t2, $a2
-	#move $t3, $a3
 	
 	la $a0, total_instr_msg
 	move $a1, $t0
@@ -514,7 +509,7 @@ PrintRegisterUsage:
 register_usage_loop:
 	beq $s0, 32, register_usage_loop_done   # done when index == 32
 
-	lb $t0,($t1) # t0 = register count
+	lbu $t0,($t1) # t0 = register count
 
 	beq $t0,$zero, skip_register_print  # skip if count==0
 	
@@ -568,7 +563,8 @@ PrintRegUsageSummaryLine:
 
 	# print count
 	move $a0,$a1
-	jal PrintInt
+	li $v0, 36 # print unsigned nubmer - max registry count can be 150 (3*50)
+	syscall
 	
 	# printe "time"
 	la $a0, register_usage_print_postfix

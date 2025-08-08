@@ -40,9 +40,8 @@ main:
     	li $a2, 10          # number of bytes
     	jal print_byte_array
     	
-    	li $a0, '\n'  	# Prints new line after number
-	li $v0, 11
-	syscall 
+	la $a0, newline # New line to print after the numbers
+	jal print_string 
 
 	# Init registers
 	la $t1, array 		 # Load base address of input byte array into $t1
@@ -57,9 +56,8 @@ main:
     	la $a0, product_of_numbers_msg  # Loads print msg to a0 
     	jal print_string 		# Calling funciton to print string
   
-	li $a0, '\n'  	# Prints new line after number
-	li $v0, 11
-	syscall 
+	la $a0, newline # New line to print after the numbers
+	jal print_string 
 	
 loop:
 	beq $t2, $t3, exit_loop # Loop condition, when counter equals to 9 we got over all the pairs (0-9)
@@ -116,15 +114,18 @@ program_end:
 #	    $a1 = char to print after the number
 # -------------------------------
 print_int:
+	addi $sp, $sp, -4
+	sw $ra, 0($sp)
+	
 	li $v0, 1 	# Print number syscall
 	syscall 
     
-	move $t0, $ra 	# Backup return address, not using stack to not use IO. Making sure t0 is not in use in print_string
 	move $a0, $a1  	# Prints new line after number
 	li $v0, 11
 	syscall 
     
-	move $ra, $t0 	# restore return address
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
 	jr $ra
 
 
